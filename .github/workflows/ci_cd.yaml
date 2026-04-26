@@ -61,6 +61,10 @@ jobs:   # jobs : build and deploy
       
       - name: Set GCP project   # -> load gcp project id
         run: gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Configure Docker for GCR
+        run: gcloud auth configure-docker --quiet gcr.io
+
       
       - name: push docker image to artifacts registry  # -> push our docker image to gcp artifacts
         run: |
