@@ -43,7 +43,7 @@ jobs:   # jobs : build and deploy
     environment: production
     steps:
       - name: checkout repo content # -> checkout repo
-        uses: actions/checkout@2
+        uses: actions/checkout@v4
       
       - name: load docker  # -> load the saved image
         run: docker load < image.tar
