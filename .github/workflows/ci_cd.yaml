@@ -51,7 +51,7 @@ jobs:   # jobs : build and deploy
           name: docker-image
           path: .
       
-      - name: load docker  # -> load the saved image
+      - name: load docker  # -> load the saved  image
         run: docker load < image.tar
 
       - name: Authenticate gcp   # -> load gcp credentials
