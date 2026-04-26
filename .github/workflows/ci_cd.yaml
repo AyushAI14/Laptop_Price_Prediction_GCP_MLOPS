@@ -8,8 +8,8 @@ on:
 
 
 
-jobs:   # jobs 1 : Testing CI
-  build:
+jobs:   # jobs : build and deploy
+  build: # jobs 1 : build
     runs-on: ubuntu-latest   # runner
     steps:
 
@@ -36,11 +36,11 @@ jobs:   # jobs 1 : Testing CI
           name : docker-image
           path: image.tar
 
-  deploy:
+  deploy:  # jobs 1 : deploy
     need: build
     runs-on: ubuntu-latest   # runner
     
-    enviorment: production
+    environment: production
     steps:
       - name: checkout repo content # -> checkout repo
         uses: actions/checkout@2
