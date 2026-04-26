@@ -36,35 +36,35 @@ jobs:   # jobs 1 : Testing CI
           name : docker-image
           path: image.tar
 
-    deploy:
-      need: build
-      runs-on: ubuntu-latest   # runner
+  deploy:
+    need: build
+    runs-on: ubuntu-latest   # runner
+    
+    enviorment: production
+    steps:
+      - name: checkout repo content # -> checkout repo
+        uses: actions/checkout@2
       
-      enviorment: production
-      steps:
-        - name: checkout repo content # -> checkout repo
-          uses: actions/checkout@2
-        
-        - name: load docker  # -> load the saved image
-          run: docker load < image.tar
+      - name: load docker  # -> load the saved image
+        run: docker load < image.tar
 
-        - name: Authenticate gcp   # -> load gcp credentials
-          uses: google-github-actions/auth@v2
-          with: 
-            credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT }}
-        
-        - name: Set GCP project   # -> load gcp project id
-          run: gcloud config set project ${{ secrets.project_id }}
-        
-        - name: push docker image to artifacts registry  # -> push our docker image to gcp artifacts
-          run:
-            docker tag laptop-mlops-app gcr.io/${{ secrets.GCP_PROJECT_ID }}/laptop-mlops-gcp
-            docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/laptop-mlops-gcp
-        
-        - name: deploy Docker image in gcp   # ->  deploy our docker to cloud run
-          run :
-            gcloud run deploy laptop-service \
-            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/laptopmlopsgcp \
-            --region asia-south1 \
-            --platform managed \
-            --allow-unauthenticated
+      - name: Authenticate gcp   # -> load gcp credentials
+        uses: google-github-actions/auth@v2
+        with: 
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+      
+      - name: Set GCP project   # -> load gcp project id
+        run: gcloud config set project ${{ secrets.project_id }}
+      
+      - name: push docker image to artifacts registry  # -> push our docker image to gcp artifacts
+        run:
+          docker tag laptop-mlops-app gcr.io/${{ secrets.GCP_PROJECT_ID }}/laptop-mlops-gcp
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/laptop-mlops-gcp
+      
+      - name: deploy Docker image in gcp   # ->  deploy our docker to cloud run
+        run :
+          gcloud run deploy laptop-service \
+          --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/laptopmlopsgcp \
+          --region asia-south1 \
+          --platform managed \
+          --allow-unauthenticated
