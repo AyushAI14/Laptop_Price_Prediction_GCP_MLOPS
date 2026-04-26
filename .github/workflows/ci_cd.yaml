@@ -44,6 +44,12 @@ jobs:   # jobs : build and deploy
     steps:
       - name: checkout repo content # -> checkout repo
         uses: actions/checkout@v4
+
+      - name: Download docker image artifact  #-> download the  image 
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image
+          path: .
       
       - name: load docker  # -> load the saved image
         run: docker load < image.tar
