@@ -74,7 +74,7 @@ jobs:   # jobs : build and deploy
       - name: deploy Docker image in gcp   # ->  deploy our docker to cloud run
         run : |
           gcloud run deploy laptop-service \
-          --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/laptopmlopsgcp \
+          --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/laptop-mlops-gcp \
           --region asia-south1 \
           --platform managed \
           --allow-unauthenticated
