@@ -63,12 +63,12 @@ jobs:   # jobs : build and deploy
         run: gcloud config set project ${{ secrets.project_id }}
       
       - name: push docker image to artifacts registry  # -> push our docker image to gcp artifacts
-        run:
+        run: |
           docker tag laptop-mlops-app gcr.io/${{ secrets.GCP_PROJECT_ID }}/laptop-mlops-gcp
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/laptop-mlops-gcp
       
       - name: deploy Docker image in gcp   # ->  deploy our docker to cloud run
-        run :
+        run : |
           gcloud run deploy laptop-service \
           --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/laptopmlopsgcp \
           --region asia-south1 \
