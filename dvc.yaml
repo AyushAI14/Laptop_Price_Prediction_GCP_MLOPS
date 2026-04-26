@@ -1,0 +1,41 @@
+stages:
+  data_ingestion:
+      cmd: python3 -m src.components.data_ingestion
+      deps: 
+      - src/components/data_ingestion.py
+      outs: 
+      - artifacts/DataIngestionArtifacts
+    
+  data_transformation:
+      cmd: python3 -m src.components.data_transformation
+      deps: 
+      - src/components/data_transformation.py
+      - artifacts/DataIngestionArtifacts
+      outs:
+      - artifacts/DataTransformationArtifacts
+  
+  ModelTraining:
+      cmd: python3 -m src.components.model_trainer
+      deps: 
+      - src/components/model_trainer.py
+      - artifacts/DataTransformationArtifacts
+
+      outs:
+      - artifacts/ModelTrainingArtifacts/v1_stacked_model.pkl
+
+
+  ModelPusher:
+      cmd: python3 -m src.components.model_pusher_mlflow
+
+      deps: 
+      - src/components/model_pusher_mlflow.py
+      - artifacts/DataTransformationArtifacts
+
+  ModelEvaluation:
+      cmd: python3 -m src.components.model_evaluation
+
+      deps: 
+      - src/components/model_evaluation.py
+      -  artifacts/ModelTrainingArtifacts/
+      outs:
+      - artifacts/ModelEvaluationArtifacts

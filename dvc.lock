@@ -1,0 +1,80 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python3 -m src.components.data_ingestion
+    deps:
+    - path: src/components/data_ingestion.py
+      hash: md5
+      md5: 2b88ce3dee518eb98dd478cbb77651ee
+      size: 1063
+    outs:
+    - path: artifacts/DataIngestionArtifacts
+      hash: md5
+      md5: eb0fb7136efd428f270be1df114fb98d.dir
+      size: 179177
+      nfiles: 1
+  data_transformation:
+    cmd: python3 -m src.components.data_transformation
+    deps:
+    - path: artifacts/DataIngestionArtifacts
+      hash: md5
+      md5: eb0fb7136efd428f270be1df114fb98d.dir
+      size: 179177
+      nfiles: 1
+    - path: src/components/data_transformation.py
+      hash: md5
+      md5: ade3cd1c37e8d4a3eb4696aa6799a7c0
+      size: 4887
+    outs:
+    - path: artifacts/DataTransformationArtifacts
+      hash: md5
+      md5: 6689fdc546f33ada5ed9d14c3a578dd0.dir
+      size: 98860
+      nfiles: 1
+  ModelTraining:
+    cmd: python3 -m src.components.model_trainer
+    deps:
+    - path: artifacts/DataTransformationArtifacts
+      hash: md5
+      md5: 6689fdc546f33ada5ed9d14c3a578dd0.dir
+      size: 98860
+      nfiles: 1
+    - path: src/components/model_trainer.py
+      hash: md5
+      md5: a4c8f39d9b2f64e49aad1541bb185935
+      size: 3407
+    outs:
+    - path: artifacts/ModelTrainingArtifacts/v1_stacked_model.pkl
+      hash: md5
+      md5: e6f885d6a404394407077811a0c7da28
+      size: 18164517
+  ModelPusher:
+    cmd: python3 -m src.components.model_pusher_mlflow
+    deps:
+    - path: artifacts/DataTransformationArtifacts
+      hash: md5
+      md5: 6689fdc546f33ada5ed9d14c3a578dd0.dir
+      size: 98860
+      nfiles: 1
+    - path: src/components/model_pusher_mlflow.py
+      hash: md5
+      md5: 18bab57865db7c085d3b7388baa2d3d9
+      size: 3778
+  ModelEvaluation:
+    cmd: python3 -m src.components.model_evaluation
+    deps:
+    - path: artifacts/ModelTrainingArtifacts/
+      hash: md5
+      md5: fee1d0020b3e76c4400d1b710e85a618.dir
+      size: 18267962
+      nfiles: 3
+    - path: src/components/model_evaluation.py
+      hash: md5
+      md5: f807124de548f08e716c79c2e95247e1
+      size: 1803
+    outs:
+    - path: artifacts/ModelEvaluationArtifacts
+      hash: md5
+      md5: 65c624b492b53e8b5f4d8e15ce870bed.dir
+      size: 80
+      nfiles: 1

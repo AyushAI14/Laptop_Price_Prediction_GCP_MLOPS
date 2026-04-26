@@ -1,0 +1,46 @@
+# Workflow -> Triggers -> Job(s) -> runner -> Step(s) -> Result
+
+name : Laptop-GCP   # workflow name
+
+on:
+  push:
+    branches: [main]  # trigger the workflow
+
+
+
+jobs:   # jobs 1 : Testing CI
+  build:
+    runs-on: ubuntu-latest   # runner
+    steps:
+
+      - name: checkout repo content # -> checkout repo
+        uses: actions/checkout@2
+      
+      - name: Setup Python # -> download python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install requirements  # ->install requirements
+        run: pip install -r requirements.txt
+
+      - name: Docker build   # -> docker build
+        run: docker build -t laptop-mlops-gcp .
+      
+      - name: save docker image
+        run: docker save laptop-mlops-gcp > image.tar
+      
+      - name : upload docker image to artifact
+        uses : actions/upload-artifact@v4
+        with:
+          name : docker-image
+          path image.tar
+
+    # deploy:
+    #   need: build
+    #   runs-on: ubuntu-latest   # runner
+    #   steps:
+    #     - name: checkout repo content # -> checkout repo
+    #       uses: actions/checkout@2
+        
+    #     - name: 
