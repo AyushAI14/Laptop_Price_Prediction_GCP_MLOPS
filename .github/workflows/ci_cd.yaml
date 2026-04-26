@@ -37,7 +37,7 @@ jobs:   # jobs : build and deploy
           path: image.tar
 
   deploy:  # jobs 1 : deploy
-    need: build
+    needs: build
     runs-on: ubuntu-latest   # runner
     
     environment: production
