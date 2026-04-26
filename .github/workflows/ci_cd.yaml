@@ -64,7 +64,7 @@ jobs:   # jobs : build and deploy
       
       - name: push docker image to artifacts registry  # -> push our docker image to gcp artifacts
         run: |
-          docker tag laptop-mlops-app gcr.io/${{ secrets.GCP_PROJECT_ID }}/laptop-mlops-gcp
+          docker tag latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/laptop-mlops-gcp
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/laptop-mlops-gcp
       
       - name: deploy Docker image in gcp   # ->  deploy our docker to cloud run
