@@ -64,13 +64,13 @@ jobs:   # jobs : build and deploy
       
       - name: push docker image to artifacts registry  # -> push our docker image to gcp artifacts
         run: |
-          docker tag latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/laptop-mlops-gcp
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/laptop-mlops-gcp
+          docker tag laptop-mlops-gcp gcr.io/${{ secrets.project_id }}/laptop-mlops-gcp
+          docker push gcr.io/${{ secrets.project_id }}/laptop-mlops-gcp
       
       - name: deploy Docker image in gcp   # ->  deploy our docker to cloud run
-        run : |
+        run: |
           gcloud run deploy laptop-service \
-          --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/laptopmlopsgcp \
-          --region asia-south1 \
-          --platform managed \
-          --allow-unauthenticated
+            --image gcr.io/${{ secrets.project_id }}/laptop-mlops-gcp \
+            --region asia-south1 \
+            --platform managed \
+            --allow-unauthenticated
