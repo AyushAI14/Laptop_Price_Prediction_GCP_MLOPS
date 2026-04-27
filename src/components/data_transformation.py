@@ -1,17 +1,20 @@
 import os
 from src.entity.config_entity import *
 import pandas as pd
-from src.utils.logger import logger
 from src.utils.helpers import *
 from src.utils.gcp_utils import *
 from matplotlib import pyplot as plt
 import seaborn as sns
 import mlflow
 import dagshub
+from gcp.monitoring.logging_config import gcp_logger
+from src.utils.logger import logger
 
-dagshub.init(repo_owner='AyushAI14', repo_name='Laptop_Price_Prediction_GCP_MLOPS', mlflow=True)
-mlflow.set_tracking_uri('https://dagshub.com/AyushAI14/Laptop_Price_Prediction_GCP_MLOPS.mlflow')
-mlflow.set_experiment('Laptop_gcp')
+
+
+# dagshub.init(repo_owner='AyushAI14', repo_name='Laptop_Price_Prediction_GCP_MLOPS', mlflow=True)
+#  mlflow.set_tracking_uri('https://dagshub.com/AyushAI14/Laptop_Price_Prediction_GCP_MLOPS.mlflow')
+# mlflow.set_experiment('Laptop_gcp')
 
 class DataTransformation:
     def __init__(self):
@@ -21,7 +24,7 @@ class DataTransformation:
 
     def eda(self):
 
-        with mlflow.start_run(run_name="EDA"):
+        with mlflow.start_run(run_name="EDA",nested=True):
 
             # BASIC INFO 
             mlflow.log_param("num_rows", self.df.shape[0])
@@ -30,7 +33,7 @@ class DataTransformation:
             nulls = self.df.isnull().sum().sum()
             duplicates = self.df.duplicated().sum()
 
-            mlflow.log_metric("total_nulls", int(nulls))
+            mlflow.log_metric("total_nulls ", int(nulls))
             mlflow.log_metric("total_duplicates", int(duplicates))
 
             # SAVE SUMMARY
@@ -80,8 +83,10 @@ class DataTransformation:
                 plt.close()
             mlflow.log_artifact(__file__)
             logger.info("EDA logged to MLflow")
+            gcp_logger("EDA logged to MLflow")
     def featureEngineering(self):
         logger.info("Starting Feature Engineering Process")
+        gcp_logger("Starting Feature Engineering Process")
         df = self.df
         df['Price (Inr)'] = df['Price (Euro)']*109.86
         df['GPU_Tier'] = df['GPU_Type'].apply(lambda x:gpu_tier(x))
@@ -94,12 +99,17 @@ class DataTransformation:
         df['Company'] = df['Company'].apply(lambda x:pd.Series(other_companies(x)))
         df.drop(columns=['Inches','Weight (kg)','Price (Euro)','CPU_Type','GPU_Type','ScreenResolution','Memory','Product'],inplace=True)
         logger.info("dropped some columns")
+        gcp_logger("dropped some columns")
         df.to_csv(DataTransformationConfig.transformes_data_file_path)
         logger.info(f'Saved the process data to {DataTransformationConfig.transformes_data_file_path}')
+        gcp_logger("Saved the process data to {DataTransformationConfig.transformes_data_file_path}")
         logger.info(" Feature Engineering Process Successfully Completed")
+        gcp_logger("Feature Engineering Process Successfully Completed")
         logger.info("Uploading Processed data to GCP ")
+        gcp_logger("Uploading Processed data to GCP ")
         upload_blob(DataIngestionConfig.gcp_bucket_name,DataTransformationConfig.gcp_bucket_blob_processed,DataTransformationConfig.transformes_data_file_path)
         logger.info(" Processed data on GCP Successfully Uploaded")
+        gcp_logger(" Processed data on GCP Successfully Uploaded")
         
 if __name__=="__main__":
     demo = DataTransformation()

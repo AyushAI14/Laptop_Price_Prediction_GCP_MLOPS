@@ -23,14 +23,6 @@ stages:
       outs:
       - artifacts/ModelTrainingArtifacts/v1_stacked_model.pkl
 
-
-  ModelPusher:
-      cmd: python3 -m src.components.model_pusher_mlflow
-
-      deps: 
-      - src/components/model_pusher_mlflow.py
-      - artifacts/DataTransformationArtifacts
-
   ModelEvaluation:
       cmd: python3 -m src.components.model_evaluation
 
@@ -39,3 +31,9 @@ stages:
       -  artifacts/ModelTrainingArtifacts/
       outs:
       - artifacts/ModelEvaluationArtifacts
+
+  Mlflow_tracking:
+      cmd: python3 -m src.mlflow_tracking.mlflow_logger
+
+      deps: 
+      - src/mlflow_tracking/mlflow_logger.py

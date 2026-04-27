@@ -10,10 +10,13 @@ import mlflow
 import joblib as jb
 from sklearn.metrics import r2_score,mean_absolute_error
 warnings.filterwarnings("ignore")
+from gcp.monitoring.logging_config import gcp_logger
 
-dagshub.init(repo_owner='AyushAI14', repo_name='Laptop_Price_Prediction_GCP_MLOPS', mlflow=True)
-mlflow.set_tracking_uri('https://dagshub.com/AyushAI14/Laptop_Price_Prediction_GCP_MLOPS.mlflow')
-mlflow.set_experiment('Laptop_gcp')
+
+# dagshub.init(repo_owner='AyushAI14', repo_name='Laptop_Price_Prediction_GCP_MLOPS', mlflow=True)
+# mlflow.set_tracking_uri('https://dagshub.com/AyushAI14/Laptop_Price_Prediction_GCP_MLOPS.mlflow')
+#  mlflow.set_experiment('Laptop_gcp')
+
 
 class ModelEvaluation:
     def __init__(self):
@@ -23,7 +26,7 @@ class ModelEvaluation:
 
     
     def evaluation(self):
-        with mlflow.start_run(run_name='evaluation'):
+        with mlflow.start_run(run_name='evaluation',nested=True):
             df = self.test_df
             X_test,y_test =  df.drop(columns =['Price (Inr)','Unnamed: 0.1','Unnamed: 0']),df['Price (Inr)']
             pipesr =  self.model
@@ -39,6 +42,7 @@ class ModelEvaluation:
             with open(ModelEvaluationConfig.EVAL_REPORT,'w') as f:
                 f.write(f'StackingRegressor regression : r2score {srr2} , mae {srmae}')
             logger.info(f"Evaluation metric file is saved here{ModelEvaluationConfig.EVAL_REPORT}")
+            gcp_logger("Evaluation metric  file is saved here{ModelEvaluationConfig.EVAL_REPORT}")
 
 
 if __name__=="__main__":

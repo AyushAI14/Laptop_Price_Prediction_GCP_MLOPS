@@ -5,8 +5,8 @@ stages:
     deps:
     - path: src/components/data_ingestion.py
       hash: md5
-      md5: 2b88ce3dee518eb98dd478cbb77651ee
-      size: 1063
+      md5: 4179c10b6f122c1861bd2f162b53f893
+      size: 1268
     outs:
     - path: artifacts/DataIngestionArtifacts
       hash: md5
@@ -23,8 +23,8 @@ stages:
       nfiles: 1
     - path: src/components/data_transformation.py
       hash: md5
-      md5: ade3cd1c37e8d4a3eb4696aa6799a7c0
-      size: 4887
+      md5: 53d0069156b2a3dc950bf701d34629a1
+      size: 5408
     outs:
     - path: artifacts/DataTransformationArtifacts
       hash: md5
@@ -41,13 +41,13 @@ stages:
       nfiles: 1
     - path: src/components/model_trainer.py
       hash: md5
-      md5: a4c8f39d9b2f64e49aad1541bb185935
-      size: 3407
+      md5: a19b713d66c1733147ca0c4359ef2922
+      size: 4075
     outs:
     - path: artifacts/ModelTrainingArtifacts/v1_stacked_model.pkl
       hash: md5
-      md5: e6f885d6a404394407077811a0c7da28
-      size: 18164517
+      md5: 5584d7ae688045f914bba2d61a7988a3
+      size: 18162933
   ModelPusher:
     cmd: python3 -m src.components.model_pusher_mlflow
     deps:
@@ -65,16 +65,23 @@ stages:
     deps:
     - path: artifacts/ModelTrainingArtifacts/
       hash: md5
-      md5: fee1d0020b3e76c4400d1b710e85a618.dir
-      size: 18267962
+      md5: d0791aa386f0b0372af953f0a996ee5e.dir
+      size: 18266378
       nfiles: 3
     - path: src/components/model_evaluation.py
       hash: md5
-      md5: f807124de548f08e716c79c2e95247e1
-      size: 1803
+      md5: 0fa963026ddcf25599cd7cf2a660f9da
+      size: 1976
     outs:
     - path: artifacts/ModelEvaluationArtifacts
       hash: md5
-      md5: 65c624b492b53e8b5f4d8e15ce870bed.dir
-      size: 80
+      md5: 54fcf30c9cf2a24c258f77a0e7a029a6.dir
+      size: 82
       nfiles: 1
+  Mlflow_tracking:
+    cmd: python3 -m src.mlflow_tracking.mlflow_logger
+    deps:
+    - path: src/mlflow_tracking/mlflow_logger.py
+      hash: md5
+      md5: 5c5ef2b48ad0df3ea077ec5d9a6f94f6
+      size: 1282

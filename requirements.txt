@@ -12,4 +12,6 @@ xgboost-cpu
 uvicorn
 dagshub
 google-cloud-storage
+google-cloud-logging 
+google-cloud-monitoring
 -e .

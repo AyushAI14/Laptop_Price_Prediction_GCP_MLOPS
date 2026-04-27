@@ -14,17 +14,20 @@ from src.entity.config_entity import *
 from src.utils.logger import logger
 import dagshub
 import warnings
+from gcp.monitoring.logging_config import gcp_logger
+
 warnings.filterwarnings("ignore")
 
-dagshub.init(repo_owner='AyushAI14', repo_name='Laptop_Price_Prediction_GCP_MLOPS', mlflow=True)
-mlflow.set_tracking_uri('https://dagshub.com/AyushAI14/Laptop_Price_Prediction_GCP_MLOPS.mlflow')
-mlflow.set_experiment('Laptop_gcp')
+# dagshub.init(repo_owner='AyushAI14', repo_name='Laptop_Price_Prediction_GCP_MLOPS', mlflow=True)
+# mlflow.set_tracking_uri('https://dagshub.com/AyushAI14/Laptop_Price_Prediction_GCP_MLOPS.mlflow')
+# mlflow.set_experiment('Laptop_gcp')
+
 
 
 class ModelPusher:
 
     def model_training(self):
-        with mlflow.start_run(run_name="stacking_experiment"):
+        with mlflow.start_run(run_name="stacking_experiment",nested=True):
 
             # LOAD DATA 
             df = pd.read_csv(ModelTrainingConfig.train_data)
@@ -100,6 +103,7 @@ class ModelPusher:
             )
 
             logger.info("MLflow logging completed.")
+            gcp_logger("MLflow logging completed.")
 
 
 if __name__=="__main__":

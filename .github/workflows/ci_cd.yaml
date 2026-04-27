@@ -29,7 +29,7 @@ jobs:   # jobs : build and deploy
       
       - name: save docker image
         run: docker save laptop-mlops-gcp > image.tar
-      
+
       - name : upload docker image to artifact
         uses : actions/upload-artifact@v4
         with:
@@ -62,7 +62,7 @@ jobs:   # jobs : build and deploy
       - name: Set GCP project   # -> load gcp project id
         run: gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Configure Docker for GCR
+      - name: Configure Docker for GCR     # -> auth for docker in gcp
         run: gcloud auth configure-docker --quiet gcr.io
 
       
