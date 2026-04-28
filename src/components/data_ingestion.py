@@ -13,15 +13,15 @@ class DataIngestion:
     def Save_data_from_gcp(self):
         
         logger.info("Starting Data Ingestion from GCP bucket ")
-        gcp_logger("Starting Data Ingestion from GCP bucket")
+        gcp_logger("event=DATA_INGESTION_START stage=ingestion component=data_ingestion source=gcp")
         download_blob(DataIngestionConfig.gcp_bucket_name,DataIngestionConfig.gcp_bucket_blob,DataIngestionConfig.gcp_data_file_path)
         logger.info("Data Ingestion from GCP bucket is Successfully completed")
-        gcp_logger("Data Ingestion from GCP bucket is Successfully completed")
+        gcp_logger("event=DATA_INGESTION_COMPLETE stage=ingestion component=data_ingestion status=success")
 
     # def Upload_data_to_gcp(self):
     #     logger.info("Starting uploading file to GCP bucket")
     #     upload_blob(DataIngestionConfig.gcp_bucket_name,DataTransformationConfig.gcp_bucket_blob_processed,DataIngestionConfig.gcp_data_file_path)
-    #     nlogger.info("Uploading file to GCP bucket is Successfully completed")
+    #     logger.info("Uploading file to GCP bucket is Successfully completed")
 
 if __name__=="__main__":
     demo = DataIngestion()

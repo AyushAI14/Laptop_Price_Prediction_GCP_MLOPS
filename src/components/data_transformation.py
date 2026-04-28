@@ -13,7 +13,7 @@ from src.utils.logger import logger
 
 
 # dagshub.init(repo_owner='AyushAI14', repo_name='Laptop_Price_Prediction_GCP_MLOPS', mlflow=True)
-#  mlflow.set_tracking_uri('https://dagshub.com/AyushAI14/Laptop_Price_Prediction_GCP_MLOPS.mlflow')
+# mlflow.set_tracking_uri('https://dagshub.com/AyushAI14/Laptop_Price_Prediction_GCP_MLOPS.mlflow')
 # mlflow.set_experiment('Laptop_gcp')
 
 class DataTransformation:
@@ -83,10 +83,11 @@ class DataTransformation:
                 plt.close()
             mlflow.log_artifact(__file__)
             logger.info("EDA logged to MLflow")
-            gcp_logger("EDA logged to MLflow")
+            gcp_logger("event=EDA_LOGGED stage=transformation component=data_transformation status=success")
+
     def featureEngineering(self):
         logger.info("Starting Feature Engineering Process")
-        gcp_logger("Starting Feature Engineering Process")
+        gcp_logger("event=FEATURE_ENGINEERING_START stage=transformation component=data_transformation")
         df = self.df
         df['Price (Inr)'] = df['Price (Euro)']*109.86
         df['GPU_Tier'] = df['GPU_Type'].apply(lambda x:gpu_tier(x))
@@ -99,17 +100,17 @@ class DataTransformation:
         df['Company'] = df['Company'].apply(lambda x:pd.Series(other_companies(x)))
         df.drop(columns=['Inches','Weight (kg)','Price (Euro)','CPU_Type','GPU_Type','ScreenResolution','Memory','Product'],inplace=True)
         logger.info("dropped some columns")
-        gcp_logger("dropped some columns")
+        gcp_logger("event=DROP_COLUMNS stage=transformation component=data_transformation")
         df.to_csv(DataTransformationConfig.transformes_data_file_path)
         logger.info(f'Saved the process data to {DataTransformationConfig.transformes_data_file_path}')
-        gcp_logger("Saved the process data to {DataTransformationConfig.transformes_data_file_path}")
+        gcp_logger("event=SAVE_TRANSFORMED_DATA stage=transformation component=data_transformation status=success")
         logger.info(" Feature Engineering Process Successfully Completed")
-        gcp_logger("Feature Engineering Process Successfully Completed")
+        gcp_logger("event=FEATURE_ENGINEERING_COMPLETE stage=transformation component=data_transformation status=success")
         logger.info("Uploading Processed data to GCP ")
-        gcp_logger("Uploading Processed data to GCP ")
+        gcp_logger("event=UPLOAD_PROCESSED_DATA_START stage=transformation component=data_transformation")
         upload_blob(DataIngestionConfig.gcp_bucket_name,DataTransformationConfig.gcp_bucket_blob_processed,DataTransformationConfig.transformes_data_file_path)
         logger.info(" Processed data on GCP Successfully Uploaded")
-        gcp_logger(" Processed data on GCP Successfully Uploaded")
+        gcp_logger("event=UPLOAD_PROCESSED_DATA_COMPLETE stage=transformation component=data_transformation status=success")
         
 if __name__=="__main__":
     demo = DataTransformation()

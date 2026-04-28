@@ -28,9 +28,8 @@ def run_pipeline():
 
 
 if __name__ == "__main__":
-    logger.info("Mlflow Experiemnt Tracking Start")
-    gcp_logger("Mlflow Experiemnt Tracking Start")
+    logger.info("Mlflow Experiemnt Tracking Start ")
+    gcp_logger("event=PIPELINE_START stage=pipeline component=ml_pipeline")
     run_pipeline()
-    gcp_logger("Mlflow Experiemnt Tracking Sucessfully Executed")
+    gcp_logger("event=PIPELINE_COMPLETE stage=pipeline component=ml_pipeline status=success")
     logger.info("Mlflow Experiemnt Tracking Sucessfully Executed")
-

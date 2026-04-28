@@ -42,7 +42,7 @@ class ModelEvaluation:
             with open(ModelEvaluationConfig.EVAL_REPORT,'w') as f:
                 f.write(f'StackingRegressor regression : r2score {srr2} , mae {srmae}')
             logger.info(f"Evaluation metric file is saved here{ModelEvaluationConfig.EVAL_REPORT}")
-            gcp_logger("Evaluation metric  file is saved here{ModelEvaluationConfig.EVAL_REPORT}")
+            gcp_logger("event=EVALUATION_REPORT_SAVED stage=evaluation component=model_evaluation status=success")
 
 
 if __name__=="__main__":

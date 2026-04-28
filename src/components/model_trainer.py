@@ -22,24 +22,23 @@ class ModelTraining:
 
     def traintestsplit(self):
         logger.info('Loading transformed data ')
-        gcp_logger("Loading transformed data")
+        gcp_logger("event=LOAD_DATA stage=training component=model_training")
         df= pd.read_csv(DataTransformationConfig.transformes_data_file_path)
         logger.info('Traing test split start')
-        gcp_logger("Traing test split start")
+        gcp_logger("event=TRAIN_TEST_SPLIT_START stage=training component=model_training")
         
         train_df,test_df = train_test_split(df,test_size=0.15,random_state=2)
-        # print(train_df.shape)
-        # print(test_df.shape)
+
         train_df.to_csv(ModelTrainingConfig.train_data)
         test_df.to_csv(ModelTrainingConfig.test_data)
         logger.info(f"Train test data save to {ModelTrainingConfig.train_data}")
-        gcp_logger("Train test data save to {ModelTrainingConfig.train_data}")
+        gcp_logger("event=SAVE_SPLIT_DATA stage=training component=model_training status=success")
         logger.info("Uploading Processed data to GCP ")
-        gcp_logger("Uploading Processed data to GCP ")
+        gcp_logger("event=UPLOAD_SPLIT_DATA_START stage=training component=model_training")
         upload_blob(DataIngestionConfig.gcp_bucket_name,ModelTrainingConfig.train_data_gcp,ModelTrainingConfig.train_data)
         upload_blob(DataIngestionConfig.gcp_bucket_name,ModelTrainingConfig.test_data_gcp,ModelTrainingConfig.test_data)
         logger.info("train test split data on GCP Successfully Uploaded")
-        gcp_logger("train test split data on GCP Successfully Uploaded")
+        gcp_logger("event=UPLOAD_SPLIT_DATA_COMPLETE stage=training component=model_training status=success")
 
     def model_training(self):
         """
@@ -68,20 +67,20 @@ class ModelTraining:
             ('step2',step2)]
         )
         logger.info('Model is Fitting')
-        gcp_logger("Model is Fitting")
+        gcp_logger("event=MODEL_FIT_START stage=training component=model_training")
         pipesr.fit(X_train,y_train)
         logger.info('Model is Fitting Done Successfully')
-        gcp_logger("Model is Fitting Done Successfully")
+        gcp_logger("event=MODEL_FIT_COMPLETE stage=training component=model_training status=success")
         logger.info("Dumping model to gcp and artifact")
-        gcp_logger("Dumping model to gcp and artifact")
+        gcp_logger("event=MODEL_DUMP_START stage=training component=model_training")
         jb.dump(pipesr,ModelTrainingConfig.model_training_file_path)
         logger.info("Uploading Model to GCP")
-        gcp_logger("Uploading Model to GCP")
+        gcp_logger("event=MODEL_UPLOAD_START stage=training component=model_training")
         upload_blob(DataIngestionConfig.gcp_bucket_name,ModelTrainingConfig.model_gcp,ModelTrainingConfig.model_training_file_path)
         logger.info("Model on GCP Successfully Uploaded")
-        gcp_logger("Model on GCP Successfully Uploaded")
+        gcp_logger("event=MODEL_UPLOAD_COMPLETE stage=training component=model_training status=success")
         logger.info("Mlflow logging is in progress")
-        gcp_logger("Mlflow logging is in progress")
+        gcp_logger("event=MLFLOW_LOGGING stage=training component=model_training")
 
 if __name__=="__main__":
     demo = ModelTraining()

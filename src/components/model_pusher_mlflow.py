@@ -45,7 +45,7 @@ class ModelPusher:
             mlflow.log_input(test_dataset,"test_df")
 
 
-            # PREPROCESSOR 
+            # PREPROCESS
             preprocessor = ColumnTransformer(
                 transformers=[
                     ('num', StandardScaler(), [3,4,9,10,11,12]),
@@ -103,7 +103,7 @@ class ModelPusher:
             )
 
             logger.info("MLflow logging completed.")
-            gcp_logger("MLflow logging completed.")
+            gcp_logger("event=MLFLOW_LOGGING stage=modelpusher component=pusher")
 
 
 if __name__=="__main__":
