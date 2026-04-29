@@ -210,6 +210,8 @@ cicd_notes.md
 /data
 /Logs
 projectflow.txt
+gcp/pubsub/
+gcp/pipelines/
 .venv
 google_cheat_sheet.txt
 /configs

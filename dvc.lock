@@ -46,8 +46,8 @@ stages:
     outs:
     - path: artifacts/ModelTrainingArtifacts/v1_stacked_model.pkl
       hash: md5
-      md5: 299b43b9762ab3ef46234e1b82b7bfcf
-      size: 18163509
+      md5: 13faf38bb352b3a1ace98bfacbd29bb1
+      size: 18161493
   ModelPusher:
     cmd: python3 -m src.components.model_pusher_mlflow
     deps:
@@ -65,8 +65,8 @@ stages:
     deps:
     - path: artifacts/ModelTrainingArtifacts/
       hash: md5
-      md5: 7d22883836cc119a1d974b012d44f8e1.dir
-      size: 18266954
+      md5: 597bd34f7d8532cd73b7c26d32e5b3dc.dir
+      size: 18264938
       nfiles: 3
     - path: src/components/model_evaluation.py
       hash: md5
@@ -75,7 +75,7 @@ stages:
     outs:
     - path: artifacts/ModelEvaluationArtifacts
       hash: md5
-      md5: de979089ffe03f44386eb1627e850e75.dir
+      md5: 13d9f359f02bb7ebc673acb57a98c542.dir
       size: 81
       nfiles: 1
   Mlflow_tracking:
